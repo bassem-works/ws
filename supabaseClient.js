@@ -1,8 +1,7 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
+const supabaseUrl = `https://jaonriwecvyvnmyktuys.supabase.co`;
+const supabaseAnonKey = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imphb25yaXdlY3Z5dm5teWt0dXlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0OTc5MzIsImV4cCI6MjA4NjA`;
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function loginEmployee(matricule, password) {
