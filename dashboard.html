@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saisie des Heures - Gestion des Heures</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="navbar">
+    <div class="nav-content">
+      <h2>Gestion des Heures</h2>
+      <div class="nav-right">
+        <span id="employeeName" class="employee-name"></span>
+        <a href="./summary.html" class="btn btn-secondary">Voir le résumé</a>
+        <button id="logoutBtn" class="btn btn-outline">Déconnexion</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="dashboard-card">
+      <h1>Saisie des Heures</h1>
+
+      <div class="month-selector">
+        <label for="monthSelect">Sélectionner le mois:</label>
+        <input type="month" id="monthSelect" />
+      </div>
+
+      <div class="calendar-grid" id="calendarGrid">
+      </div>
+
+      <div id="message" class="info-message"></div>
+    </div>
+  </div>
+
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Modifier les heures</h2>
+      <p id="modalDate"></p>
+      <form id="editForm">
+        <div class="form-group">
+          <label for="hoursInput">Heures travaillées:</label>
+          <input type="number" id="hoursInput" min="0" max="24" step="0.5" required />
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+          <button type="button" id="deleteBtn" class="btn btn-danger">Supprimer</button>
+          <button type="button" class="btn btn-outline" id="cancelBtn">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="./dashboard.js"></script>
+</body>
+</html>

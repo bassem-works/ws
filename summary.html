@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Résumé des Heures - Gestion des Heures</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="navbar">
+    <div class="nav-content">
+      <h2>Gestion des Heures</h2>
+      <div class="nav-right">
+        <span id="employeeName" class="employee-name"></span>
+        <a href="./dashboard.html" class="btn btn-secondary">Saisie des heures</a>
+        <button id="logoutBtn" class="btn btn-outline">Déconnexion</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="summary-card">
+      <h1>Résumé des Heures</h1>
+
+      <div class="month-selector">
+        <label for="monthSelect">Sélectionner le mois:</label>
+        <input type="month" id="monthSelect" />
+      </div>
+
+      <div class="rate-input">
+        <div class="form-group">
+          <label for="baseRate">Tarif horaire de base (€):</label>
+          <input type="number" id="baseRate" min="0" step="0.01" value="15" />
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="summary-label">Heures normales</div>
+          <div class="summary-value" id="normalHours">0.00 h</div>
+        </div>
+
+        <div class="summary-item">
+          <div class="summary-label">Heures supplémentaires (×1.25)</div>
+          <div class="summary-value" id="overtimeRegular">0.00 h</div>
+        </div>
+
+        <div class="summary-item">
+          <div class="summary-label">Heures dimanche (×2.0)</div>
+          <div class="summary-value" id="overtimeSunday">0.00 h</div>
+        </div>
+
+        <div class="summary-item">
+          <div class="summary-label">Total heures travaillées</div>
+          <div class="summary-value highlight" id="totalHours">0.00 h</div>
+        </div>
+      </div>
+
+      <div class="payment-summary">
+        <h2>Calcul de la rémunération</h2>
+        <div class="payment-details">
+          <div class="payment-line">
+            <span>Heures normales:</span>
+            <span id="normalPay">0.00 €</span>
+          </div>
+          <div class="payment-line">
+            <span>Heures supplémentaires (×1.25):</span>
+            <span id="overtimeRegularPay">0.00 €</span>
+          </div>
+          <div class="payment-line">
+            <span>Heures dimanche (×2.0):</span>
+            <span id="overtimeSundayPay">0.00 €</span>
+          </div>
+          <div class="payment-line total">
+            <span>Total:</span>
+            <span id="totalPay">0.00 €</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="details-section">
+        <h3>Détails par jour</h3>
+        <div id="dailyDetails" class="daily-details"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./summary.js"></script>
+</body>
+</html>
