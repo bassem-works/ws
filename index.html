@@ -1,25 +1,32 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Employee Hours &amp; Overtime System</title>
-    <meta property="og:image" content="https://bolt.new/static/og_default.png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion - Gestion des Heures</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
-  <body>
-    <div id="app"></div>
-    
-  <script type="module" src="./main.js"></script>
- 
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-<script>
-  eruda.init();
-</script>
-    
-    
-    
-  </body>
+<body>
+  <div class="container">
+    <div class="auth-card">
+      <h1>Connexion</h1>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="matricule">Matricule</label>
+          <input type="text" id="matricule" name="matricule" required placeholder="Ex: 929">
+        </div>
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" name="password" required placeholder="Entrez votre mot de passe">
+        </div>
+        <button type="submit" class="btn btn-primary">Se connecter</button>
+        <div id="loginError" class="error-message"></div>
+      </form>
+      <div class="auth-footer">
+        <p>Nouveau employé ? <a href="./register.html">Créer un compte</a></p>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="./login.js"></script>
+</body>
 </html>
