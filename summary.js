@@ -132,6 +132,7 @@ function renderAgendaGrid(entries) {
 
   agendaGridEl.innerHTML = '';
 
+  // En-têtes des jours de la semaine
   const weekDays = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
   weekDays.forEach(day => {
     const dayHeader = document.createElement('div');
@@ -140,15 +141,20 @@ function renderAgendaGrid(entries) {
     agendaGridEl.appendChild(dayHeader);
   });
 
+  // Cases vides avant le premier jour
   for (let i = 0; i < firstDay; i++) {
     const emptyDay = document.createElement('div');
     emptyDay.className = 'agenda-day empty';
     agendaGridEl.appendChild(emptyDay);
   }
 
+  // Map des entrées
   const entriesMap = {};
-  entries.forEach(entry => { entriesMap[entry.date] = entry; });
+  entries.forEach(entry => {
+    entriesMap[entry.date] = entry;
+  });
 
+  // Génération des jours du mois
   for (let day = 1; day <= daysInMonth; day++) {
     const dateStr = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     const date = new Date(currentYear, currentMonth - 1, day);
@@ -163,13 +169,16 @@ function renderAgendaGrid(entries) {
     const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     if (dateStr === todayStr) dayCard.classList.add('today');
 
+    // Numéro du jour
     const dayNum = document.createElement('div');
     dayNum.className = 'agenda-day-num';
     dayNum.textContent = day;
     dayCard.appendChild(dayNum);
 
+    // Horaires et heures si entrée existante
     if (entriesMap[dateStr]) {
       const entry = entriesMap[dateStr];
+
       const timeSlot = document.createElement('div');
       timeSlot.className = 'agenda-time-slot';
       timeSlot.textContent = `${formatTime(entry.start_time)} ⇒ ${formatTime(entry.end_time)}`;
@@ -185,7 +194,7 @@ function renderAgendaGrid(entries) {
 
     agendaGridEl.appendChild(dayCard);
   }
-}
+                                                                             }
 
 function renderDailyDetails(details) {
   if (details.length === 0) {
