@@ -127,10 +127,10 @@ async function calculateSummary() {
     const overtimeSundayPay = overtimeSunday * rate * 2.0;
     const totalPay = normalPay + overtimeRegularPay + overtimeSundayPay;
 
-    normalPayEl.textContent = `${normalPay.toFixed(2)} €`;
-    overtimeRegularPayEl.textContent = `${overtimeRegularPay.toFixed(2)} €`;
-    overtimeSundayPayEl.textContent = `${overtimeSundayPay.toFixed(2)} €`;
-    totalPayEl.textContent = `${totalPay.toFixed(2)} €`;
+    normalPayEl.textContent = `${normalPay.toFixed(2)} DT`;
+    overtimeRegularPayEl.textContent = `${overtimeRegularPay.toFixed(2)} DT`;
+    overtimeSundayPayEl.textContent = `${overtimeSundayPay.toFixed(2)} DT`;
+    totalPayEl.textContent = `${totalPay.toFixed(2)} DT`;
 
     renderAgendaGrid(entries, details);
     renderDailyDetails(details);
