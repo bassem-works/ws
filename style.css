@@ -659,19 +659,23 @@ h1 {
 }
 
 .agenda-time-slot {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--primary-color);
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1.1;       /* réduit l’espace vertical */
+  margin: 0;              /* supprime marges inutiles */
+  text-align: center;     /* centre le texte */
 }
 
 .agenda-hours {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: var(--success-color);
   text-align: center;
-  margin-top: 0.25rem;
+  margin-top: 0.15rem;    /* espace minimal entre horaires et heures */
+  line-height: 1.1;       /* compact */
 }
+
 
 @media (max-width: 1024px) {
   .time-picker-group {
