@@ -856,7 +856,7 @@ h1 {
   }
   .agenda-time-slot,
 .agenda-hours {
-  line-height: 1.2;
+  line-height: 0.8;
   margin: 2px 0;
   font-size: 0.9em;
 }
