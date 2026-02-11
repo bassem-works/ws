@@ -201,7 +201,7 @@ function renderAgendaGrid(entries, details) {
       const timeSlot = document.createElement('div');
       timeSlot.className = 'agenda-time-slot';
       timeSlot.textContent = `${formatTime(entry.start_time)} ⇒ ${formatTime(entry.end_time)}`;
-      dayCard.appendChild(timeSlot);
+      // dayCard.appendChild(timeSlot);
 
       const hoursInfo = document.createElement('div');
       hoursInfo.className = 'agenda-hours';
