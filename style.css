@@ -662,7 +662,7 @@ h1 {
   font-size: 0.85rem;
   color: var(--primary-color);
   font-weight: 500;
-  line-height: 1.1;       /* réduit l’espace vertical */
+  line-height: 0.8;       /* réduit l’espace vertical */
   margin: 0;              /* supprime marges inutiles */
   text-align: center;     /* centre le texte */
 }
@@ -673,7 +673,7 @@ h1 {
   color: var(--success-color);
   text-align: center;
   margin-top: 0.15rem;    /* espace minimal entre horaires et heures */
-  line-height: 1.1;       /* compact */
+  line-height: 0.8;       /* compact */
 }
 
 
