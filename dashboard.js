@@ -1,4 +1,4 @@
-import { getTimeEntries, saveTimeEntry, deleteTimeEntry } from './supabaseClient.js';
+import { getTimeEntries, saveTimeEntry, deleteTimeEntry, calculateHours } from './supabaseClient.js';
 
 const employeeId = localStorage.getItem('employeeId');
 const employeeName = localStorage.getItem('employeeName');
@@ -15,15 +15,21 @@ const message = document.getElementById('message');
 const editModal = document.getElementById('editModal');
 const editForm = document.getElementById('editForm');
 const modalDate = document.getElementById('modalDate');
-const hoursInput = document.getElementById('hoursInput');
+const startTimeInput = document.getElementById('startTime');
+const endTimeInput = document.getElementById('endTime');
+const hoursPreview = document.getElementById('hoursPreview');
 const deleteBtn = document.getElementById('deleteBtn');
 const cancelBtn = document.getElementById('cancelBtn');
 const closeBtn = document.querySelector('.close');
 const logoutBtn = document.getElementById('logoutBtn');
+const shiftMorningBtn = document.getElementById('shiftMorning');
+const shiftAfternoonBtn = document.getElementById('shiftAfternoon');
+const presetBtns = document.querySelectorAll('.preset-btn');
 
 let currentMonth, currentYear;
 let timeEntriesMap = {};
 let selectedDate = null;
+let currentEntry = null;
 
 const today = new Date();
 monthSelect.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
@@ -40,7 +46,12 @@ async function loadTimeEntries() {
     const entries = await getTimeEntries(employeeId, currentMonth, currentYear);
     timeEntriesMap = {};
     entries.forEach(entry => {
-      timeEntriesMap[entry.date] = entry.hours_worked;
+      timeEntriesMap[entry.date] = {
+        hours: entry.hours_worked,
+        startTime: entry.start_time,
+        endTime: entry.end_time,
+        shiftType: entry.shift_type
+      };
     });
     renderCalendar();
   } catch (error) {
@@ -98,7 +109,8 @@ function renderCalendar() {
     hoursDisplay.className = 'hours-display';
 
     if (timeEntriesMap[dateStr]) {
-      hoursDisplay.textContent = `${timeEntriesMap[dateStr]}h`;
+      const entry = timeEntriesMap[dateStr];
+      hoursDisplay.textContent = `${entry.hours}h`;
       dayElement.classList.add('has-hours');
     } else {
       hoursDisplay.textContent = '-';
@@ -107,14 +119,26 @@ function renderCalendar() {
     dayElement.appendChild(dayNumber);
     dayElement.appendChild(hoursDisplay);
 
-    dayElement.addEventListener('click', () => openEditModal(dateStr, timeEntriesMap[dateStr]));
+    dayElement.addEventListener('click', () => openEditModal(dateStr));
 
     calendarGrid.appendChild(dayElement);
   }
 }
 
-function openEditModal(date, currentHours) {
+function updateHoursPreview() {
+  const startTime = startTimeInput.value;
+  const endTime = endTimeInput.value;
+
+  if (startTime && endTime) {
+    const hours = calculateHours(startTime, endTime);
+    hoursPreview.textContent = `${hours.toFixed(2)} h`;
+  }
+}
+
+function openEditModal(date) {
   selectedDate = date;
+  currentEntry = timeEntriesMap[date];
+
   const dateObj = new Date(date + 'T00:00:00');
   modalDate.textContent = dateObj.toLocaleDateString('fr-FR', {
     weekday: 'long',
@@ -122,28 +146,67 @@ function openEditModal(date, currentHours) {
     month: 'long',
     day: 'numeric'
   });
-  hoursInput.value = currentHours || '';
+
+  if (currentEntry) {
+    startTimeInput.value = currentEntry.startTime;
+    endTimeInput.value = currentEntry.endTime;
+    updateHoursPreview();
+  } else {
+    startTimeInput.value = '06:00';
+    endTimeInput.value = '14:00';
+    updateHoursPreview();
+  }
+
   editModal.style.display = 'block';
-  hoursInput.focus();
 }
 
 function closeEditModal() {
   editModal.style.display = 'none';
   selectedDate = null;
+  currentEntry = null;
 }
+
+presetBtns.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const time = btn.dataset.time;
+    const parentWrapper = btn.closest('.time-input-wrapper');
+    const input = parentWrapper.querySelector('input[type="time"]');
+    input.value = time;
+    updateHoursPreview();
+  });
+});
+
+shiftMorningBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  startTimeInput.value = '06:00';
+  endTimeInput.value = '14:00';
+  updateHoursPreview();
+});
+
+shiftAfternoonBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  startTimeInput.value = '14:00';
+  endTimeInput.value = '22:00';
+  updateHoursPreview();
+});
+
+startTimeInput.addEventListener('change', updateHoursPreview);
+endTimeInput.addEventListener('change', updateHoursPreview);
 
 editForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const hours = parseFloat(hoursInput.value);
+  const startTime = startTimeInput.value;
+  const endTime = endTimeInput.value;
 
-  if (hours < 0 || hours > 24) {
-    alert('Les heures doivent être entre 0 et 24');
+  if (!startTime || !endTime) {
+    alert('Veuillez remplir les heures de début et fin');
     return;
   }
 
   try {
-    await saveTimeEntry(employeeId, selectedDate, hours);
+    await saveTimeEntry(employeeId, selectedDate, startTime, endTime);
     message.textContent = 'Heures enregistrées avec succès';
     message.className = 'success-message';
     closeEditModal();

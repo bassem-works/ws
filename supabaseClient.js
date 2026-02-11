@@ -58,11 +58,20 @@ export async function getTimeEntries(employeeId, month, year) {
   return data || [];
 }
 
-export async function saveTimeEntry(employeeId, date, hoursWorked) {
+export async function saveTimeEntry(employeeId, date, startTime, endTime, shiftType = 'custom') {
+  const hours = calculateHours(startTime, endTime);
+
   const { data, error } = await supabase
     .from('time_entries')
     .upsert(
-      { employee_id: employeeId, date, hours_worked: hoursWorked },
+      {
+        employee_id: employeeId,
+        date,
+        start_time: startTime,
+        end_time: endTime,
+        shift_type: shiftType,
+        hours_worked: hours
+      },
       { onConflict: 'employee_id,date' }
     )
     .select()
@@ -71,6 +80,21 @@ export async function saveTimeEntry(employeeId, date, hoursWorked) {
   if (error) throw error;
 
   return data;
+}
+
+export function calculateHours(startTime, endTime) {
+  const [startHour, startMin] = startTime.split(':').map(Number);
+  const [endHour, endMin] = endTime.split(':').map(Number);
+
+  const startMinutes = startHour * 60 + startMin;
+  const endMinutes = endHour * 60 + endMin;
+
+  let diffMinutes = endMinutes - startMinutes;
+  if (diffMinutes < 0) {
+    diffMinutes += 24 * 60;
+  }
+
+  return parseFloat((diffMinutes / 60).toFixed(2));
 }
 
 export async function deleteTimeEntry(employeeId, date) {
