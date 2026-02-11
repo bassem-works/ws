@@ -10,9 +10,6 @@ if (!employeeId) {
 document.getElementById('employeeName').textContent = employeeName;
 
 const monthSelect = document.getElementById('monthSelect');
-const baseRate = document.getElementById('baseRate');
-const logoutBtn = document.getElementById('logoutBtn');
-
 const normalHoursEl = document.getElementById('normalHours');
 const overtimeRegularEl = document.getElementById('overtimeRegular');
 const overtimeSundayEl = document.getElementById('overtimeSunday');
@@ -25,6 +22,8 @@ const totalPayEl = document.getElementById('totalPay');
 
 const agendaGridEl = document.getElementById('agendaGrid');
 const dailyDetailsEl = document.getElementById('dailyDetails');
+const logoutBtn = document.getElementById('logoutBtn');
+const baseRate = document.getElementById('baseRate');
 
 let currentMonth, currentYear;
 let entriesData = [];
@@ -59,7 +58,6 @@ function calculateHours(entries) {
   let normalHours = 0;
   let overtimeRegular = 0;
   let overtimeSunday = 0;
-
   const details = [];
 
   entries.forEach(entry => {
@@ -68,10 +66,7 @@ function calculateHours(entries) {
     const startTime = entry.start_time || '06:00';
     const endTime = entry.end_time || '14:00';
 
-    let normal = 0;
-    let otRegular = 0;
-    let otSunday = 0;
-    let type = '';
+    let normal = 0, otRegular = 0, otSunday = 0, type = '';
 
     if (dayOfWeek === 0) {
       otSunday = hours;
@@ -94,17 +89,7 @@ function calculateHours(entries) {
     overtimeRegular += otRegular;
     overtimeSunday += otSunday;
 
-    details.push({
-      date: entry.date,
-      hours,
-      startTime,
-      endTime,
-      normal,
-      otRegular,
-      otSunday,
-      type,
-      dayOfWeek
-    });
+    details.push({ date: entry.date, hours, startTime, endTime, normal, otRegular, otSunday, type });
   });
 
   return { normalHours, overtimeRegular, overtimeSunday, details };
@@ -113,11 +98,9 @@ function calculateHours(entries) {
 async function calculateSummary() {
   try {
     const entries = await getTimeEntries(employeeId, currentMonth, currentYear);
-
     entriesData = entries;
 
     const { normalHours, overtimeRegular, overtimeSunday, details } = calculateHours(entries);
-
     const totalHours = normalHours + overtimeRegular + overtimeSunday;
 
     normalHoursEl.textContent = `${normalHours.toFixed(2)} h`;
@@ -126,7 +109,6 @@ async function calculateSummary() {
     totalHoursEl.textContent = `${totalHours.toFixed(2)} h`;
 
     const rate = parseFloat(baseRate.value) || 0;
-
     const normalPay = normalHours * rate;
     const overtimeRegularPay = overtimeRegular * rate * 1.25;
     const overtimeSundayPay = overtimeSunday * rate * 2.0;
@@ -137,15 +119,14 @@ async function calculateSummary() {
     overtimeSundayPayEl.textContent = `${overtimeSundayPay.toFixed(2)} DT`;
     totalPayEl.textContent = `${totalPay.toFixed(2)} DT`;
 
-    renderAgendaGrid(entries, details);
+    renderAgendaGrid(entries);
     renderDailyDetails(details);
-
   } catch (error) {
     console.error('Erreur lors du calcul:', error);
   }
 }
 
-function renderAgendaGrid(entries, details) {
+function renderAgendaGrid(entries) {
   const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
   const firstDay = new Date(currentYear, currentMonth - 1, 1).getDay();
 
@@ -159,18 +140,14 @@ function renderAgendaGrid(entries, details) {
     agendaGridEl.appendChild(dayHeader);
   });
 
-  const adjustedFirstDay = firstDay === 0 ? 0 : firstDay;
-
-  for (let i = 0; i < adjustedFirstDay; i++) {
+  for (let i = 0; i < firstDay; i++) {
     const emptyDay = document.createElement('div');
     emptyDay.className = 'agenda-day empty';
     agendaGridEl.appendChild(emptyDay);
   }
 
   const entriesMap = {};
-  entries.forEach(entry => {
-    entriesMap[entry.date] = entry;
-  });
+  entries.forEach(entry => { entriesMap[entry.date] = entry; });
 
   for (let day = 1; day <= daysInMonth; day++) {
     const dateStr = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
@@ -180,16 +157,11 @@ function renderAgendaGrid(entries, details) {
     const dayCard = document.createElement('div');
     dayCard.className = 'agenda-day';
 
-    if (dayOfWeek === 0) {
-      dayCard.classList.add('sunday');
-    } else if (dayOfWeek === 6) {
-      dayCard.classList.add('saturday');
-    }
+    if (dayOfWeek === 0) dayCard.classList.add('sunday');
+    if (dayOfWeek === 6) dayCard.classList.add('saturday');
 
     const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    if (dateStr === todayStr) {
-      dayCard.classList.add('today');
-    }
+    if (dateStr === todayStr) dayCard.classList.add('today');
 
     const dayNum = document.createElement('div');
     dayNum.className = 'agenda-day-num';
@@ -201,7 +173,7 @@ function renderAgendaGrid(entries, details) {
       const timeSlot = document.createElement('div');
       timeSlot.className = 'agenda-time-slot';
       timeSlot.textContent = `${formatTime(entry.start_time)} ⇒ ${formatTime(entry.end_time)}`;
-      // dayCard.appendChild(timeSlot);
+      dayCard.appendChild(timeSlot);
 
       const hoursInfo = document.createElement('div');
       hoursInfo.className = 'agenda-hours';
@@ -222,7 +194,6 @@ function renderDailyDetails(details) {
   }
 
   details.sort((a, b) => new Date(a.date) - new Date(b.date));
-
   dailyDetailsEl.innerHTML = '';
 
   const table = document.createElement('table');
@@ -243,14 +214,9 @@ function renderDailyDetails(details) {
   table.appendChild(thead);
 
   const tbody = document.createElement('tbody');
-
   details.forEach(detail => {
     const dateObj = new Date(detail.date + 'T00:00:00');
-    const dateFormatted = dateObj.toLocaleDateString('fr-FR', {
-      weekday: 'short',
-      day: 'numeric',
-      month: 'short'
-    });
+    const dateFormatted = dateObj.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
 
     const row = document.createElement('tr');
     row.innerHTML = `
@@ -262,7 +228,6 @@ function renderDailyDetails(details) {
       <td>${detail.otSunday.toFixed(2)}h</td>
       <td>${detail.type}</td>
     `;
-
     tbody.appendChild(row);
   });
 
