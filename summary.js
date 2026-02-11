@@ -49,6 +49,12 @@ function getDayOfWeek(dateStr) {
   return date.getDay();
 }
 
+function formatTime(timeStr) {
+  if (!timeStr) return '';
+  const [h, m] = timeStr.split(':');
+  return `${parseInt(h)}:${m}`;
+}
+
 function calculateHours(entries) {
   let normalHours = 0;
   let overtimeRegular = 0;
@@ -99,7 +105,6 @@ function calculateHours(entries) {
       type,
       dayOfWeek
     });
-
   });
 
   return { normalHours, overtimeRegular, overtimeSunday, details };
@@ -195,7 +200,7 @@ function renderAgendaGrid(entries, details) {
       const entry = entriesMap[dateStr];
       const timeSlot = document.createElement('div');
       timeSlot.className = 'agenda-time-slot';
-      timeSlot.textContent = `${entry.start_time} - ${entry.end_time}`;
+      timeSlot.textContent = `${formatTime(entry.start_time)} ⇒ ${formatTime(entry.end_time)}`;
       dayCard.appendChild(timeSlot);
 
       const hoursInfo = document.createElement('div');
@@ -250,7 +255,7 @@ function renderDailyDetails(details) {
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${dateFormatted}</td>
-      <td>${detail.startTime} - ${detail.endTime}</td>
+      <td>${formatTime(detail.startTime)} ⇒ ${formatTime(detail.endTime)}</td>
       <td>${detail.hours.toFixed(2)}h</td>
       <td>${detail.normal.toFixed(2)}h</td>
       <td>${detail.otRegular.toFixed(2)}h</td>
