@@ -850,4 +850,10 @@ h1 {
   .details-table {
     font-size: 0.65rem;
   }
+  .agenda-time-slot,
+.agenda-hours {
+  line-height: 1.2;
+  margin: 2px 0;
+  font-size: 0.9em;
+}
 }
