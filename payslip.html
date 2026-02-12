@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiche de Paie - Gestion des Heures</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="navbar">
+    <div class="nav-content">
+      <h2>Gestion des Heures</h2>
+      <div class="nav-right">
+        <span id="employeeName" class="employee-name"></span>
+        <a href="./dashboard.html" class="btn btn-secondary">Saisie des heures</a>
+        <a href="./summary.html" class="btn btn-secondary">Résumé</a>
+        <button id="logoutBtn" class="btn btn-outline">Déconnexion</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="payslip-card">
+      <div class="payslip-header">
+        <h1>Fiche de Paie</h1>
+        <div class="month-selector">
+          <label for="monthSelect">Mois:</label>
+          <input type="month" id="monthSelect" />
+        </div>
+      </div>
+
+      <div class="payslip-container">
+        <div class="payslip-section">
+          <h3>Détails du Calcul</h3>
+
+          <div class="payslip-grid">
+            <div class="payslip-row">
+              <span class="label">Heures normales (40h/semaine)</span>
+              <span class="value" id="normalHoursPayslip">0.00 h</span>
+            </div>
+            <div class="payslip-row">
+              <span class="label">Heures supplémentaires (×1.25)</span>
+              <span class="value" id="overtimeHoursPayslip">0.00 h</span>
+            </div>
+            <div class="payslip-row">
+              <span class="label">Heures dimanche (×2.0)</span>
+              <span class="value" id="sundayHoursPayslip">0.00 h</span>
+            </div>
+          </div>
+
+          <div class="payslip-divider"></div>
+
+          <div class="payslip-grid">
+            <div class="payslip-row">
+              <label for="baseHourlyRate">Tarif horaire (DT):</label>
+              <input type="number" id="baseHourlyRate" min="0" step="0.01" value="15" />
+            </div>
+            <div class="payslip-row">
+              <span class="label">Salaire horaire normal</span>
+              <span class="value" id="normalPay">0.00 DT</span>
+            </div>
+            <div class="payslip-row">
+              <span class="label">Salaire heures supp (×1.25)</span>
+              <span class="value" id="overtimePay">0.00 DT</span>
+            </div>
+            <div class="payslip-row">
+              <span class="label">Salaire heures dimanche (×2.0)</span>
+              <span class="value" id="sundayPay">0.00 DT</span>
+            </div>
+          </div>
+
+          <div class="payslip-divider"></div>
+
+          <div class="payslip-grid">
+            <div class="payslip-row bonus-row">
+              <label for="attendanceBonus">Prime de présence (DT):</label>
+              <input type="number" id="attendanceBonus" min="0" step="0.01" value="0" />
+            </div>
+            <div class="payslip-row bonus-row">
+              <label for="transportAllowance">Prime de transport (DT):</label>
+              <input type="number" id="transportAllowance" min="0" step="0.01" value="0" />
+            </div>
+            <div class="payslip-row bonus-row">
+              <label for="mealAllowance">Prime de panier (DT):</label>
+              <input type="number" id="mealAllowance" min="0" step="0.01" value="0" />
+            </div>
+          </div>
+
+          <div class="payslip-divider"></div>
+
+          <div class="payslip-grid">
+            <div class="payslip-row gross-total">
+              <span class="label">Salaire Brut (Total Gains)</span>
+              <span class="value" id="grossSalary">0.00 DT</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="payslip-section deductions">
+          <h3>Déductions</h3>
+
+          <div class="payslip-grid">
+            <div class="payslip-row">
+              <span class="label">CNSS (9.68%)</span>
+              <span class="value negative" id="cnssDeduction">0.00 DT</span>
+            </div>
+            <div class="payslip-row">
+              <span class="label">IRPP (Impôt)</span>
+              <span class="value negative" id="irppDeduction">0.00 DT</span>
+            </div>
+            <div class="payslip-row bonus-row">
+              <label for="cssDeduction">CSS (Contribution Sanitaire Sociale):</label>
+              <input type="number" id="cssDeduction" min="0" step="0.01" value="0" />
+            </div>
+          </div>
+
+          <div class="payslip-divider"></div>
+
+          <div class="payslip-grid">
+            <div class="payslip-row">
+              <span class="label">Total Déductions</span>
+              <span class="value negative" id="totalDeductions">0.00 DT</span>
+            </div>
+          </div>
+
+          <div class="payslip-divider"></div>
+
+          <div class="payslip-grid">
+            <div class="payslip-row net-total">
+              <span class="label">Salaire Net</span>
+              <span class="value" id="netSalary">0.00 DT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="payslip-notes">
+        <p>Régime: 40 heures par semaine</p>
+        <p>CNSS: 9.68% | IRPP: Célibataire sans enfants</p>
+      </div>
+
+      <button id="printBtn" class="btn btn-primary print-btn">Imprimer la Fiche de Paie</button>
+    </div>
+  </div>
+
+  <script type="module" src="./payslip.js"></script>
+</body>
+</html>
